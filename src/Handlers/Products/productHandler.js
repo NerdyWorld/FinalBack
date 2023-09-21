@@ -85,7 +85,7 @@ productHandler.getProduct = async(req, res) =>{
   const response = await productController.getProduct(req.body.productId);
 
   if(response.msg === "Product not found"){
-    res.status(404).json(response);
+    res.status(500).json(response);
   };
   res.status(200).json(response);
   

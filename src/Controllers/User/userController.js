@@ -277,9 +277,11 @@ userController.updateUser = async(data, userId) =>{
     };
 
     if(newUser.password){
-      const oldPasswordMatchNew = bcrypt.compareSync(oldPassword, findUser.password);
-      if(!oldPasswordMatchNew){
-        return {msg: "Old password incorrect"};
+      if(oldPassword){
+        const oldPasswordMatchNew = bcrypt.compareSync(oldPassword, findUser.password);
+        if(!oldPasswordMatchNew){
+          return {msg: "Old password incorrect"};
+        };
       };
 
       const hashedPassword = bcrypt.hashSync(newUser.password, 10);
@@ -570,7 +572,7 @@ userController.forgotPassword = async(userEmail) =>{
               <h3>Forgot your password?</h3>
               <p class="p1">Don't worry, we got you! Just click the button below to reset your password.</p>
               <div class="a">
-                <a href="http://localhost:3000/reset-password/${getToken}">RESET YOUR PASSWORD</a>
+                <a href="https://rivelle.netlify.app/reset-password/${getToken}">RESET YOUR PASSWORD</a>
               </div>
               </div>
           </div>
@@ -593,7 +595,7 @@ userController.forgotPassword = async(userEmail) =>{
       to: findUser.email,
       subject: `Rivélle Support`,
       html: HTML,
-      type: "forgotPasword"
+      type: "forgotPassword"
     };
 
     sendMail(data);
@@ -883,9 +885,9 @@ userController.sendActivationCode = async(data) =>{
             <h2>Rivélle Company</h2>
             <div class="header-bottom">
               <a href="https://rivelle.netlify.app/home">Home</a>
-              <a href="https://rivelle.netlify.app/store">Store</a>
+              <a href="https://rivelle.netlify.app/ourStore">Store</a>
               <a href="https://rivelle.netlify.app/collections/gucci">Gucci</a>
-              <a href="https://rivelle.netlify.app/collections/louisVuitton">LV</a>
+              <a href="https://rivelle.netlify.app/collections/louisvuitton">LV</a>
               <a href="https://rivelle.netlify.app/collections/jimmyChoo" class="noBorder">Jimmy Choo</a>
             </div>
           </div>
@@ -1021,6 +1023,34 @@ userController.contactPreference = async(data) =>{
       findUser.dataValues.favorites = JSON.parse(findUser.dataValues.favorites);
     }
     return {msg: "Preferences updated", data: findUser.dataValues};
+
+   
+  }catch(error){
+    console.log(error);
+  }
+};
+
+
+userController.emptyCart = async(userId) =>{
+  try{
+    console.log(userId);
+
+    const findUser = await Users.findOne({
+      where: {
+        id: userId
+      }
+    });
+
+    if(!findUser){
+      return {msg: "User not found"};
+    };
+
+    findUser.cart = [];
+
+    await findUser.save({fields: ['cart']});
+
+
+    return {msg: "Empty cart", data: findUser.dataValues};
 
    
   }catch(error){

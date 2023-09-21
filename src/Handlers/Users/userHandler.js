@@ -100,7 +100,7 @@ userHandler.forgotPasswordHandler = async(req, res) =>{
 
   const response = await userController.forgotPassword(req.body.email);
 
-  console.log(response);
+    res.status(200).json(response);
 };
 
 userHandler.favToggleHandler = async(req, res) =>{
@@ -148,6 +148,14 @@ userHandler.validateCredentialsHandler = async(req, res) =>{
 userHandler.contactPreferenceHandler = async(req, res) =>{
 
   const response = await userController.contactPreference(req.body);
+
+    res.status(200).json(response);
+  
+};
+
+userHandler.emptyCartHandler = async(req, res) =>{
+console.log(req.body);
+  const response = await userController.emptyCart(req.body);
 
     res.status(200).json(response);
   

@@ -143,7 +143,7 @@ productController.fetchProductsToDb = async() =>{
 productController.filterProducts = async(fields) =>{
 
   const { brand, category, color, priceMin, priceMax } = fields;
-
+  console.log(brand);
   try{
     let filteredProducts = [];
 
@@ -229,7 +229,7 @@ productController.getProduct = async(productId) =>{
   try{
     const findProduct = await Products.findOne({
       where:{
-        name: productId
+        id: productId
       }
     });
 
@@ -256,21 +256,20 @@ productController.searchProducts = async(string) =>{
     let foundProducts = [];
 
     findProducts.map(el => {
-      if(el.name.includes(string)){
+      if(el.name.trim().toLowerCase().includes(string.toLowerCase())){
         foundProducts.push(el);
       }
     });
 
     findProducts.map(el => {
       el.categories.map(category => {
-        if(category.includes(string)){
+        if(category.toLowerCase().includes(string.toLowerCase())){
           foundProducts.push(el);
         }
       })
     });
 
-    console.log(foundProducts);
-
+    
     return {msg:"Products found", data: foundProducts};
 
   }catch(error){
